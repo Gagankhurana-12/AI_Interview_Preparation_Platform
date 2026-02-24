@@ -5,6 +5,8 @@ require("dotenv").config();
 const connectDB=require('./config/db');
 
 const User=require('./models/User');
+const authRoutes = require("./routes/authRoutes");
+const protect=require('./middleware/authMiddleware')
 
 //checking database connection
 connectDB();
@@ -12,21 +14,13 @@ connectDB();
 //middleware
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
-//test route 
-
-app.get('/test-user',async(req,res)=>{
-    try{
-        const user= await User.create({
-            name:"Gagan",
-            email:"gagan@gmail.com",
-            password:"123456"
-        });
-        res.json(user);
-    }
-        catch(error){
-       res.status(500).json({error:error.message});
-        }
+app.get("/api/protected",protect,(req,res)=>{
+    res.json({
+        message:"you have accessed protected route",
+        user:req.user,
+    });
 });
 
 app.get("/",(req,res)=>{
