@@ -42,7 +42,7 @@ exports.signup =async(req,res)=>{
     }
     catch(error){
         res.status(500).json({
-            message:"Signup failed",
+            message:"Signup failed", 
             error:error.message,
         })
     }
